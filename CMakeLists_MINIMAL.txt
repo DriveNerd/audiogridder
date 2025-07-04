@@ -1,0 +1,80 @@
+cmake_minimum_required(VERSION 3.15)
+
+project(AudioGridderServer VERSION 1.0.0)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Find CUDA
+find_package(CUDAToolkit QUIET)
+
+# Minimal Boost - only program_options
+find_package(Boost 1.73.0 QUIET COMPONENTS program_options)
+
+# JUCE setup
+add_subdirectory(JUCE EXCLUDE_FROM_ALL)
+
+# Create minimal server executable
+juce_add_console_app(AudioGridderServer
+    PRODUCT_NAME "AudioGridder Server"
+    COMPANY_NAME "AudioGridder"
+)
+
+# Add source files
+target_sources(AudioGridderServer PRIVATE
+    Server/Source/App.cpp
+    Server/Source/AudioWorker.cpp
+    Server/Source/Processor.cpp
+    Server/Source/ProcessorChain.cpp
+    Common/Source/Logger.cpp
+    Common/Source/Utils.hpp
+)
+
+# Include directories
+target_include_directories(AudioGridderServer PRIVATE
+    Common/Source
+    Server/Source
+)
+
+# Link libraries
+target_link_libraries(AudioGridderServer PRIVATE
+    juce::juce_core
+    juce::juce_events
+    juce::juce_audio_basics
+    juce::juce_audio_devices
+    juce::juce_audio_formats
+    juce::juce_audio_processors
+    juce::juce_audio_utils
+    juce::juce_gui_basics
+    juce::juce_gui_extra
+)
+
+# Add Boost if found
+if(Boost_FOUND)
+    target_link_libraries(AudioGridderServer PRIVATE Boost::program_options)
+    target_compile_definitions(AudioGridderServer PRIVATE HAVE_BOOST=1)
+endif()
+
+# Add CUDA if found
+if(CUDAToolkit_FOUND)
+    target_link_libraries(AudioGridderServer PRIVATE CUDA::cudart)
+    target_compile_definitions(AudioGridderServer PRIVATE HAVE_CUDA=1)
+endif()
+
+# Compiler definitions
+target_compile_definitions(AudioGridderServer PRIVATE
+    JUCE_WEB_BROWSER=0
+    JUCE_USE_CURL=0
+    JUCE_APPLICATION_NAME_STRING="AudioGridder Server"
+    JUCE_APPLICATION_VERSION_STRING="1.0.0"
+    AG_SERVER=1
+)
+
+# Windows specific settings
+if(WIN32)
+    target_compile_definitions(AudioGridderServer PRIVATE
+        _WIN32_WINNT=0x0601
+        WINVER=0x0601
+    )
+endif()
