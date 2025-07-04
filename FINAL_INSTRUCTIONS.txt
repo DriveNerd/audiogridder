@@ -1,0 +1,30 @@
+=== AUDIOGRIDDER WINDOWS BUILD - FINAL INSTRUCTIONS ===
+
+✅ ALL WINDOWS BUILD FIXES ARE COMPLETE AND AVAILABLE IN MASTER BRANCH
+
+🎯 TO BUILD THE AUDIOGRIDDER GPU SERVER EXE:
+
+1. Clone the repository:
+   git clone --recursive https://github.com/DriveNerd/AudioGridder-GPU.git
+   cd AudioGridder-GPU
+
+2. Run the build script in Windows Command Prompt (cmd):
+   BUILD_MINIMAL_NO_DEPS.bat
+
+3. If JUCE is missing, run first:
+   DOWNLOAD_JUCE.bat
+
+4. Your AudioGridderServer.exe will be created at:
+   build-minimal-no-deps\Server\RelWithDebInfo\AudioGridderServer.exe
+
+💡 IMPORTANT:
+- Use regular Windows Command Prompt (cmd), not PowerShell
+- You can also use Developer Command Prompt for VS 2022 if available
+- Make sure Visual Studio 2022 with C++ workload is installed
+
+📚 FOR TROUBLESHOOTING:
+- See QUICK_BUILD_GUIDE.md for step-by-step help
+- See WINDOWS_BUILD_FIX_GUIDE.md for technical details
+
+Repository: https://github.com/DriveNerd/AudioGridder-GPU.git
+Status: READY FOR WINDOWS BUILD ✅
